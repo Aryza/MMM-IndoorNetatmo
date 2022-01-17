@@ -10,6 +10,7 @@ Module.register('MMM-IndoorNetatmo', {
   defaults: {
     refreshToken: null,
     updateInterval: 5, // every 5 minutes, refresh interval on netatmo is 10 minutes
+    showHumidity: false,
     api: {
       base: 'https://api.netatmo.com/',
       authEndpoint: 'oauth2/token',
@@ -97,7 +98,9 @@ Module.register('MMM-IndoorNetatmo', {
     var device = data.body.devices[0];
     this.lastUpdate = device.dashboard_data.time_utc;
     this.sendNotification('INDOOR_TEMPERATURE', device.dashboard_data.Temperature.toFixed(1) + '°');
-    this.sendNotification('INDOOR_HUMIDITY', device.dashboard_data.Humidity.toFixed(0) + '%');
+    if (showHumidity === true) {
+		this.sendNotification('INDOOR_HUMIDITY', device.dashboard_data.Humidity + '%');
+	}
     return Q({});
   },
   getScripts: function() {
