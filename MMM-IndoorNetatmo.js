@@ -5,12 +5,11 @@
  * MIT Licensed.
  */
  /* global $, Q, moment, Module, Log */
-Module.register('MMM-IndoorNetatmo', {
+ Module.register('MMM-IndoorNetatmo', {
   // default config,
   defaults: {
     refreshToken: null,
-    updateInterval: 5, // every 5 minutes, refresh interval on netatmo is 10 minutes
-    showHumidity: false,
+    updateInterval: 9, // every 9 minutes, refresh interval on netatmo is 10 minutes
     api: {
       base: 'https://api.netatmo.com/',
       authEndpoint: 'oauth2/token',
@@ -36,7 +35,7 @@ Module.register('MMM-IndoorNetatmo', {
     ).then(
       this.load.data.bind(that),
     ).then(
-      this.sendNotifications.bind(that)
+      this.sendNotifications.bind(that) 
     ).catch(function (error) {
 		Log.error(this.name + " - Error - " + " " + error.responseText);
     }).done(
@@ -74,7 +73,7 @@ Module.register('MMM-IndoorNetatmo', {
   load: {
     token: function() {
       Log.info(this.name + " recieving access token");
-
+            
       return Q($.ajax({
         type: 'POST',
         url: this.config.api.base + this.config.api.authEndpoint,
@@ -98,9 +97,8 @@ Module.register('MMM-IndoorNetatmo', {
     var device = data.body.devices[0];
     this.lastUpdate = device.dashboard_data.time_utc;
     this.sendNotification('INDOOR_TEMPERATURE', device.dashboard_data.Temperature.toFixed(1) + '°');
-    if (showHumidity === true) {
-		this.sendNotification('INDOOR_HUMIDITY', device.dashboard_data.Humidity + '%');
-	}
+	this.sendNotification('INDOOR_HUMIDITY', device.dashboard_data.Humidity + '%');
+
     return Q({});
   },
   getScripts: function() {
